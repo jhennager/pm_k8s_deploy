@@ -1,0 +1,50 @@
+---
+- name: Apply infrastructure plan
+  community.general.terraform:
+    project_path: "{{ terraform_directory }}"
+    state: present
+    variables:
+      pm_password: "{{ pm_password }}"
+  register: tf_result
+
+- name: debug
+  debug:
+    msg: "{{ tf_result }}"
+
+- name: Set fact from Terraform output
+  set_fact:
+    k8s_master_ip: "{{ tf_result.outputs.k8s_master_ip.value }}"
+
+- name: Extract Terraform outputs
+  set_fact:
+    tf_outputs: "{{ tf_result.outputs }}"
+
+- name: Add each node to in-memory inventory under group 'k8s'
+  add_host:
+    name: "{{ item.key }}"
+    ansible_host: "{{ item.value }}"
+    ansible_user: jason
+    ansible_ssh_private_key_file: ~/.ssh/cloudinit_id_rsa
+    groups: k8s
+  loop: "{{ k8s_hosts | dict2items }}"
+
+- name: Check where inventory_file is pointing
+  debug:
+    var: dynamic_inventory_file
+
+
+- name: Overwrite static Ansible inventory
+  copy:
+    dest: "{{ dynamic_inventory_file }}"
+    owner: "1000"
+    group: "1000"
+    mode: '0644'
+    content: |
+            [k8s_master]
+            master ansible_host={{ tf_outputs.k8s_master_ip.value }} ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+
+            [k8s_workers]
+            worker1 ansible_host={{ tf_outputs.k8s_worker1_ip.value }} ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+            worker2 ansible_host={{ tf_outputs.k8s_worker2_ip.value }} ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+            worker3 ansible_host={{ tf_outputs.k8s_worker3_ip.value }} ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+

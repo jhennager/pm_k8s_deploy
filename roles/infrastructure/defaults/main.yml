@@ -1,0 +1,8 @@
+---
+terraform_directory: ../terraform/
+dynamic_inventory_file: "../inventory/k8s"
+k8s_hosts:
+  master: "{{ tf_outputs.k8s_master_ip.value }}"
+  worker1: "{{ tf_outputs.k8s_worker1_ip.value }}"
+  worker2: "{{ tf_outputs.k8s_worker2_ip.value }}"
+  worker3: "{{ tf_outputs.k8s_worker3_ip.value }}"
