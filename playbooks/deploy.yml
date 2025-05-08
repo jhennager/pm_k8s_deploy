@@ -50,6 +50,14 @@
     - worker_nodes
   tags: [configure]
 
+- name: Fetch kubeconfig from master to bastion
+  hosts: master
+  gather_facts: false
+  become: true
+  roles:
+    - kube_fetch
+  tags: [fetch_kube]
+
 - name: Configure NFS storage via help nfs provisioner
   hosts: localhost
   vars:
@@ -59,11 +67,3 @@
   roles:
     - k8s_storage
   tags: [k8s_storage]
-
-- name: Fetch kubeconfig from master to bastion
-  hosts: master
-  gather_facts: false
-  become: true
-  roles:
-    - kube_fetch
-  tags: [fetch_kube]

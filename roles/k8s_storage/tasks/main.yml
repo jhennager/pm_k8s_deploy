@@ -6,7 +6,7 @@
 
 - name: Update Helm repositories
   ansible.builtin.command: helm repo update
-  changed_when: false  # avoids marking the task as "changed" every time
+  changed_when: false
 
 - name: Create namespace for provisioner
   kubernetes.core.k8s:
