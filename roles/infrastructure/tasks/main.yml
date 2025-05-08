@@ -7,14 +7,6 @@
       pm_password: "{{ pm_password }}"
   register: tf_result
 
-- name: debug
-  debug:
-    msg: "{{ tf_result }}"
-
-- name: Set fact from Terraform output
-  set_fact:
-    k8s_master_ip: "{{ tf_result.outputs.k8s_master_ip.value }}"
-
 - name: Extract Terraform outputs
   set_fact:
     tf_outputs: "{{ tf_result.outputs }}"
