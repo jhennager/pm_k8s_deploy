@@ -1,0 +1,13 @@
+---
+- name: Deploy Proxmox VM with Terraform
+  hosts: localhost
+  vars:
+    terraform_directory: ../terraform/
+  tasks:
+
+    - name: destroy plan
+      community.general.terraform:
+        project_path: "{{ terraform_directory }}"
+        state: absent
+        variables:
+          pm_password: "{{ pm_password }}"

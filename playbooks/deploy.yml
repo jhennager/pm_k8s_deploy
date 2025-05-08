@@ -1,0 +1,98 @@
+---
+- name: Deploy Proxmox VM with Terraform
+  hosts: localhost
+  vars:
+    terraform_directory: ../terraform/
+  tasks:
+
+    - name: Apply plan
+      community.general.terraform:
+        project_path: "{{ terraform_directory }}"
+        state: present
+        variables:
+          pm_password: "{{ pm_password }}"
+      register: tf_result
+
+    - name: debug
+      debug:
+        msg: "{{ tf_result }}"
+
+    - name: Set fact from Terraform output
+      set_fact:
+        k8s_master_ip: "{{ tf_result.outputs.k8s_master_ip.value }}"
+
+    - name: Add new VM to inventory
+      add_host:
+        name: provisioned_vm
+        ansible_host: "{{ k8s_master_ip }}"
+        ansible_user: jason
+        ansible_ssh_private_key_file: ~/.ssh/cloudinit_id_rsa
+        groups: dynamic_targets
+
+- name: Wait for VM SSH to be ready
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Wait for SSH on VM
+      ansible.builtin.wait_for:
+        host: "{{ k8s_master_ip }}"
+        port: 22
+        timeout: 300
+        delay: 5
+        state: started
+
+- name: Configure Kubernetes Master Node
+  hosts: dynamic_targets
+  become: true
+  gather_facts: true
+  tasks:
+    
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+        update_cache: yes
+    
+    - name: Ensure keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+    
+    - name: Download and install Kubernetes APT signing key
+      shell: |
+        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    
+    - name: Add Kubernetes community-owned APT repo
+      copy:
+        dest: /etc/apt/sources.list.d/kubernetes.list
+        content: |
+          deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /
+    
+    - name: Update APT package index
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    
+    - name: Install kubelet, kubeadm, and kubectl
+      apt:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        update_cache: yes
+    
+    - name: Hold Kubernetes packages to prevent automatic upgrades
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
+    
