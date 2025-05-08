@@ -1,0 +1,6 @@
+---
+    nfs_server: 192.168.0.145
+    nfs_path: /volume1/share/k8s
+    release_name: nfs-client
+    namespace: nfs-provisioner
+    storage_class_name: nfs-client

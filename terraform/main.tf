@@ -12,7 +12,7 @@ resource "proxmox_vm_qemu" "master" {
 
   cores       = 2
   sockets     = 1
-  memory      = 4096
+  memory      = 8192
 
   network {
     model     = "virtio"
@@ -32,7 +32,7 @@ resource "proxmox_vm_qemu" "worker1" {
 
   cores       = 2
   sockets     = 1
-  memory      = 4096
+  memory      = 8192
 
   network {
     model     = "virtio"
@@ -52,7 +52,7 @@ resource "proxmox_vm_qemu" "worker2" {
 
   cores       = 2
   sockets     = 1
-  memory      = 4096
+  memory      = 8192
 
   network {
     model     = "virtio"
@@ -72,7 +72,7 @@ resource "proxmox_vm_qemu" "worker3" {
 
   cores       = 2
   sockets     = 1
-  memory      = 4096
+  memory      = 8192
 
   network {
     model     = "virtio"

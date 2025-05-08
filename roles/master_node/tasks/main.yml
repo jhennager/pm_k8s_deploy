@@ -6,10 +6,11 @@
       - ca-certificates
       - curl
       - containerd
+      - nfs-common
     update_cache: yes
   register: apt_result
   until: apt_result is succeeded
-  retries: 10
+  retries: 20
   delay: 15
 
 - name: Enable and start containerd

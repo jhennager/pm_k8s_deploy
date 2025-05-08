@@ -50,6 +50,16 @@
     - worker_nodes
   tags: [configure]
 
+- name: Configure NFS storage via help nfs provisioner
+  hosts: localhost
+  vars:
+    ansible_python_interpreter: /usr/bin/python3.9
+  gather_facts: false
+  become: true
+  roles:
+    - k8s_storage
+  tags: [k8s_storage]
+
 - name: Fetch kubeconfig from master to bastion
   hosts: master
   gather_facts: false
