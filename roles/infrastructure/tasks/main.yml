@@ -24,7 +24,6 @@
   debug:
     var: dynamic_inventory_file
 
-
 - name: Overwrite static Ansible inventory
   copy:
     dest: "{{ dynamic_inventory_file }}"

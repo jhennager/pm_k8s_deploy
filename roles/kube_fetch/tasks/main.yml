@@ -1,0 +1,7 @@
+---
+- name: Fetch admin kubeconfig
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: ~/.kube/config
+    flat: yes
+    mode: '0600'

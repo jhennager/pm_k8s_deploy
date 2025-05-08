@@ -49,3 +49,11 @@
   roles:
     - worker_nodes
   tags: [configure]
+
+- name: Fetch kubeconfig from master to bastion
+  hosts: master
+  gather_facts: false
+  become: true
+  roles:
+    - kube_fetch
+  tags: [fetch_kube]

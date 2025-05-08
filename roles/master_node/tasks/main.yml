@@ -9,8 +9,8 @@
     update_cache: yes
   register: apt_result
   until: apt_result is succeeded
-  retries: 5
-  delay: 10
+  retries: 10
+  delay: 15
 
 - name: Enable and start containerd
   systemd:
