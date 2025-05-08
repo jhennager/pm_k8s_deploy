@@ -37,13 +37,13 @@
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Install kubelet, kubeadm, kubectl, and nfs-utils
+- name: Install kubelet, kubeadm, kubectl, and nfs-common
   apt:
     name:
       - kubelet
       - kubeadm
       - kubectl
-      - nfs-utils
+      - nfs-common
     state: present
     update_cache: yes
 
