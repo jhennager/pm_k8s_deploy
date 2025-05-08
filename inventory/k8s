@@ -1,7 +1,7 @@
 [k8s_master]
-master ansible_host=192.168.0.217 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+master ansible_host=192.168.0.131 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
 
 [k8s_workers]
-worker1 ansible_host=192.168.0.129 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
-worker2 ansible_host=192.168.0.160 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
-worker3 ansible_host=192.168.0.241 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+worker1 ansible_host=192.168.0.245 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+worker2 ansible_host=192.168.0.186 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
+worker3 ansible_host=192.168.0.227 ansible_user=jason ansible_ssh_private_key_file=~/.ssh/cloudinit_id_rsa
