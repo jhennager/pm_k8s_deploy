@@ -4,7 +4,7 @@
     project_path: "{{ terraform_directory }}"
     state: present
     variables:
-      pm_password: "{{ pm_password }}"
+      pm_password: "{{ vault_pm_password }}"
   register: tf_result
 
 - name: Extract Terraform outputs
