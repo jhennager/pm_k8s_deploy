@@ -10,4 +10,4 @@
         project_path: "{{ terraform_directory }}"
         state: absent
         variables:
-          pm_password: "{{ pm_password }}"
+          pm_password: "{{ vault_pm_password }}"
